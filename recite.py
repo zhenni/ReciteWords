@@ -9,7 +9,7 @@ import random
 # constant
 DOCNAME = 'GRE3000_learning.xml'
 LOGFILE = "log/"+DOCNAME+"_"+ time.strftime('%Y-%m-%d_%H:%M:%S') +".log";
-log = os.open(LOGFILE, os.O_CREAT);
+log = open(LOGFILE, 'w');
 is_modified = False
 
 
@@ -95,11 +95,14 @@ def set_learned(x, i):
     if i < 0 or i > x.length-1:
         return False;
     
+    global is_modified;
+    global log
+
     is_modified = True;
     learned_node = x[i].getElementsByTagName("learned")[0].childNodes[0];
     learned_node.nodeValue = '1';
     word_node = x[i].getElementsByTagName("word")[0].childNodes[0];
-    log.write(word_node.nodeValue + "\t\t"+ i + "\t\t learned 0 1\n")
+    log.write(word_node.nodeValue + "\t\t"+ str(i) + "\t\t learned 0 1\n")
     return True;
 
 def show_status(x):
@@ -109,7 +112,7 @@ def show_status(x):
             count = count+1;
     print "#################### STATUS ######################"
     print "Learned:", count, "/", x.length, "words";
-    print "Finish about ", (count/x.length*100) , "%";
+    print "Finish about ", "%.2f"%(count/1.0/x.length*100.0) , "%";
     print "##################################################"
 
 def show_help():
@@ -152,7 +155,7 @@ def recite(x):
                 i = norm(i+1);
             i = display(x, i)
         elif cmd == "L":
-            if is_learned(x, i) == "0":
+            if is_learned(x, i) == False:
                 set_learned(x, i);
             else:
                 print "The word has arreaady been in the finished file."
@@ -177,6 +180,8 @@ while cmd != "Q":
     else:
         show_help();
     cmd = getch().upper();
+
+log.close()
 
 # No modification remove the log
 if is_modified == False:
