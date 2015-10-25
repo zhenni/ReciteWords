@@ -1,0 +1,89 @@
+<html>
+<head>
+
+<script type="text/javascript">
+    
+    
+
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();
+} else{// code for IE6, IE5
+    try{
+        xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");
+    } catch (e){
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+}
+
+//xmlhttp.open("GET","http://www.zhenwei.science/blog/out.xml",false);
+//xmlhttp.open("GET","http://www.zhenwei.science/blog/GRE3000_new.xml",false);
+xmlhttp.open("GET","GRE3000_new.xml",false);
+//xmlhttp.open("GET","out.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+
+var x=xmlDoc.getElementsByTagName("item");
+var ii = 0;
+
+function display(i)
+{
+    word=(x[i].getElementsByTagName("word")[0].childNodes[0].nodeValue);
+    trans=(x[i].getElementsByTagName("trans")[0].childNodes[0].nodeValue);
+    phonetic=(x[i].getElementsByTagName("phonetic")[0].childNodes[0].nodeValue);
+    txt=word + "<br />"+phonetic + "<br />" + trans;
+    document.getElementById("showWord").innerHTML=txt;
+}
+
+function prevWord(){
+    ii = ii-1;
+    if (ii < 0) ii = x.length-1;
+    display(ii);
+}
+
+function nextWord(){
+    ii = ii+1;
+    if (ii >= x.length) ii = 0;
+    display(ii);
+
+}
+
+function keyup() {
+	var keycode;
+	if(window.event) // IE8 及更早IE版本
+	{
+		keycode=event.keyCode;
+        
+	}
+	else if(event.charCode) // IE9/Firefox/Chrome/Opera/Safari
+	{
+		keycode=event.charCode;
+	}
+    
+//    alert(x);
+    if(keycode == 37 || keycode == 38){//left and top : Prev
+        prevWord();
+    }
+    else if(keycode == 39 || keycode == 40 || keycode == 13){//right and bottom and enter: Next
+        nextWord();
+    }
+}
+
+function cli(){
+    x[ii].getElementsByTagName("word")[0].childNodes[0].nodeValue = "hello";
+    display(ii);
+}
+
+</script>
+</head>
+<body onload="display(ii)" onkeyup="keyup()">
+
+<div id='PrevNextButton'>
+    <button onclick="prevWord()"> Prev </button>
+    <button onclick="nextWord()"> Next </button>
+</div>
+<div id='showWord'></div>
+
+
+</body>
+</html>
+
